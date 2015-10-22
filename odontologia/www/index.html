@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- Hefesoft -->
+    <script src="js/vendors/hefesoft/util/utilVars.js"></script>
+
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <!-- Cordova is bootstrapped by ionic-platform-web-client, uncomment this if you remove ionic-platform-web-client... -->
+    <!-- <script src="cordova.js"></script> -->
+
+     <!--Register-->
+    <script src="js/vendors/hefesoft/modules/register.js"></script>
+    
+    <!-- Jquery -->
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    
+    <!-- Parse -->
+    <script src="//www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+    <script src="js/vendors/hefesoft/parse/services/parse.js"></script>
+    
+    <!-- moment -->
+    <script src="lib/moment/min/moment-with-locales.min.js"></script>
+    <script src="lib/twix/dist/twix.min.js"></script>
+    
+    <!-- PubNub -->
+    <script src="//cdn.pubnub.com/pubnub.min.js"></script>
+    <script src="//pubnub.github.io/angular-js/scripts/pubnub-angular.js"></script>
+    <script src="js/vendors/hefesoft/pubnub/services/pubnub.js"></script>
+
+
+    <!-- open fb -->
+    <script src="js/vendors/hefesoft/openfb/openfb.js"></script>
+    <script src="js/vendors/hefesoft/openfb/ngopenfb.js"></script>
+
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    
+    <!-- Login -->
+    <script src="js/odontologia/login/controller.js"></script>
+    
+    <!-- Home -->
+    <script src="js/odontologia/home/controller.js"></script>
+    
+    <!-- Agenda -->
+    <script src="js/vendors/hefesoft/agenda/service.js"></script>
+    <script src="js/odontologia/citas/controller.js"></script>
+    <script src="js/odontologia/citas/service.js"></script>
+    
+    <!-- Odontologos -->
+    <script src="js/odontologia/odontologos/controller.js"></script>
+    
+    <!-- Success -->
+    <script src="js/odontologia/success/controller.js"></script>
+    
+    <!-- Util -->
+    <script src="js/util/util.js"></script>
+    
+  </head>
+
+  <body ng-app="starter">
+    <ion-nav-view></ion-nav-view>
+  </body>
+</html>

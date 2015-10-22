@@ -1,0 +1,28 @@
+<ion-view view-title="Citas">
+  <ion-content padding="true" class="has-header">
+        <form>
+            <label class="item item-select" name="Mes">
+                <span class="input-label">Mes</span>
+                 <select  
+                          ng-options="month for month in months"
+                          ng-change="monthChange(selectedMonth)"
+                          ng-model="selectedMonth"></select>
+            </label>
+            <label class="item item-select" name="Dia">
+                <span class="input-label">Dia</span>
+                <select  
+                          ng-options="day for day in days"
+                          ng-change="dayChange(selectedDay, selectedMonth)"
+                          ng-model="selectedDay"></select>
+            </label>
+            <label class="item item-select" name="Disponibilidad">
+                <span class="input-label">Disponibilidad</span>
+                <select  
+                          ng-options="item.label for item in disponibilidad"
+                          ng-change="disponibilidadChange(selectedDisponibilidad)"
+                          ng-model="selectedDisponibilidad"></select>
+            </label>
+        </form>
+        <button ng-click="solicitar(selectedDisponibilidad)" class="button button-positive button-block ">Solicitar</button>
+    </ion-content>
+</ion-view>
