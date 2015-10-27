@@ -1,11 +1,13 @@
 <ion-view view-title="Citas">
-  <ion-content padding="true" class="has-header">    
-    <div ng-repeat="i in data track by $index" class="list">
-        <a class="item item-avatar" href="#">
-          <img src="{{i.pictureUrl}}">
-          <h2>{{i.name}}</h2>
-          <p>{{i.estado}}</p>
-        </a>
-    </div>
+  <ion-content padding="true" class="has-header"> 
+  	<ion-list>
+  	 <ion-item ng-repeat="i in data track by $index">   
+		 <a class="item item-avatar" href="#">
+           <img src="{{i.pictureUrl}}">
+           <h2>{{i.name}}</h2>
+           <p>{{i.estado}}</p>
+          </a>
+  		</ion-item>
+	  </ion-list>
     </ion-content>
 </ion-view>

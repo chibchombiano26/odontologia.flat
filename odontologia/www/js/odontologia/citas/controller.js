@@ -2,7 +2,12 @@
 angular.module("starter")
 .controller("citasCtrl", function($scope, $state, agendaService, pubNubService, $ionicLoading, $stateParams, citasService, utilService){
     
-    $scope.months = moment.months();
+    var mesActual = moment().get("month");
+    var diaActual = moment().get("date");
+    var meses = moment.months();
+
+
+    $scope.months = meses.splice(mesActual);
     $scope.days = [];
     $scope.data = [];
     $scope.disponibilidad = [];
@@ -27,9 +32,10 @@ angular.module("starter")
     
     $scope.monthChange = function(item){
         var monthSelected = moment().month(item).get('month');
-        var yearSelected = moment().month(item).get('year');
-        
-        $scope.days = getDaysInMonth(monthSelected, yearSelected);
+        var yearSelected = moment().month(item).get('year');        
+
+        var daysMonth = getDaysInMonth(monthSelected, yearSelected);
+        $scope.days = daysMonth.splice(diaActual -1); 
     }
     
     $scope.dayChange = function(day, month){
@@ -52,7 +58,14 @@ angular.module("starter")
             disponibilidad.push(result[i]);
             result[i]['label'] = result[i].start.format("HH:mm") + " a " + result[i].end.format("HH:mm");
         }
-        $scope.disponibilidad = disponibilidad;
+        
+        var fechaActual = moment(new Date()); 
+        var result = _.filter(disponibilidad, function(i){
+          var inicio = moment(i.start);
+          return moment(inicio).isAfter(fechaActual);
+        });
+
+        $scope.disponibilidad = result;
         $ionicLoading.hide();
       })
     }
