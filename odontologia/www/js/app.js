@@ -11,7 +11,7 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
 .run(function($ionicPlatform, ngFB) {
   $ionicPlatform.ready(function() {
     
-    ngFB.init({appId: '1482696718726490'});
+    ngFB.init({appId: '1665259377039481'});
     
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -32,9 +32,10 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
   moment.locale('es');
   Parse.initialize("kWv0SwtEaz20E7gm5jUNRtzdbLoJktNYvpVWTYpc", "xhg8VzMlpguoJt3TffH62LntLUJj2DFYtYXwJ0Lg");
 
+
   window.fbAsyncInit = function() {
     Parse.FacebookUtils.init({ // this line replaces FB.init({
-      appId      : '1482696718726490', // Facebook App ID
+      appId      : '1665259377039481', // Facebook App ID
       status     : false,  // check Facebook Login status
       cookie     : true,  // enable cookies to allow Parse to access the session
       xfbml      : true,  // initialize Facebook social plugins on the page
@@ -47,8 +48,8 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
     js = d.createElement(s); js.id = id;
-    //js.src = "//connect.facebook.net/en_US/sdk.js";
-    js.src = "//connect.facebook.net/en_US/sdk/debug.js";
+    //js.src = "https://connect.facebook.net/en_US/sdk.js";
+    js.src = "https://connect.facebook.net/en_US/sdk/debug.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
   
