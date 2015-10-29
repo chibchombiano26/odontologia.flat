@@ -70,7 +70,10 @@
                           ng-change="disponibilidadChange(selectedDisponibilidad)"
                           ng-model="selectedDisponibilidad"></select>
             </label>
+            <label class="item item-input">
+              <input type="text" ng-model="paciente.numeroContacto" placeholder="Numero de telefono de contacto">
+            </label>
         </form>
-        <button ng-click="solicitar(selectedDisponibilidad)" class="button button-positive button-block ">Solicitar</button>
+        <button ng-disabled="invalido" ng-click="solicitar(selectedDisponibilidad)" class="button button-positive button-block ">Solicitar</button>
     </ion-content>
 </ion-view>

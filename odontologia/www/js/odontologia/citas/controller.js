@@ -11,7 +11,8 @@ angular.module("starter")
     $scope.days = [];
     $scope.data = [];
     $scope.disponibilidad = [];
-
+    $scope.paciente = {};
+    $scope.invalido = true;
     
     $scope.prestadorData = utilService['medicoSeleccionado'];    
     var currentUsername = Parse.User.current().get("email");
@@ -53,6 +54,8 @@ angular.module("starter")
     }
     
     $scope.monthChange = function(item){
+        $scope.invalido = true;
+
         var monthSelected = moment().month(item).get('month');
         var yearSelected = moment().month(item).get('year');        
 
@@ -69,7 +72,7 @@ angular.module("starter")
     $scope.dayChange = function(day, month){
         var fecha = moment({year : moment().get('year'), month: moment().month(month).get('month'), day: day });
         
-        if(fecha.isValid()){            
+        if(fecha.isValid()){
             /*Aveces cuando el calendario del medico no es publico se queda cargando es para evitar que se quede asi*/
             consultarDisponibilidad(fecha);
             $timeout(function(){                
@@ -85,6 +88,10 @@ angular.module("starter")
     function consultarDisponibilidad(fecha){        
         $ionicLoading.show();
         agendaService.getDisponibilidad(fecha, intervalo.horaInicio, intervalo.numeroHorasTrabajo, intervalo.intervaloCitas, prestador).then(function(result){
+
+        /*Activa el boton de solicitar*/
+        $scope.invalido = false;
+
         var disponibilidad = [];
         for (var i = 0; i < result.length; i++) {
             disponibilidad.push(result[i]);
@@ -122,6 +129,14 @@ angular.module("starter")
         item["name"] = Parse.User.current().get("name");
         item["pictureUrl"] = Parse.User.current().get("pictureUrl");
         item["message"] = item.name + " ha solicitado una cita para el "  + item.start.format("LLLL");
+
+        if($scope.paciente.hasOwnProperty("numeroContacto")){
+            item["numeroContacto"] = $scope.paciente.numeroContacto.toString();
+        }
+        else{
+           item["numeroContacto"] = "No suministrado";   
+        }
+
         pubNubService.sendMessage(prestador, angular.toJson(item));
         saveCita(item, prestador);
     }
@@ -141,6 +156,13 @@ angular.module("starter")
         cita.set("start", item.start.format("YYYY-MM-DD HH:mm"));
         cita.set("end", item.end.format("YYYY-MM-DD HH:mm"));
         cita.set("estado", "solicitada");
+
+        if($scope.paciente.hasOwnProperty("numeroContacto")){
+            cita.set("numeroContacto", $scope.paciente.numeroContacto.toString());
+        }
+        else{
+           cita.set("numeroContacto", "No suministrado");
+        }
         
         //Prestador
         cita.set("prestadorPictureUrl", prestadorSeleccionado.pictureUrl);
