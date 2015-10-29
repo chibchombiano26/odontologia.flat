@@ -1,7 +1,11 @@
 /*global angular, Parse, _, moment*/
 angular.module("starter")
 .controller("loginCtrl", function($scope, pubNubService, parseService, $state){
-    
+      
+    if(!hefesoft.isEmpty(Parse.User.current())){
+      $state.go("app.home");
+    }
+
     // Open the login modal
     $scope.login = function() {
       //parseService.loginFb();

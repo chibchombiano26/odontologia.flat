@@ -24,6 +24,19 @@ angular.module('starter')
             deferred.resolve(result);
         })
         return deferred.promise;
+
+        
+    }
+
+    datafactory.getCitasInvervalo = function(prestador){
+        var deferred = $q.defer()
+        var Citas = Parse.Object.extend('Citas_Intervalos');
+        var query = new Parse.Query(Citas);
+        query.equalTo("prestador", prestador);
+        query.find().then(function(result){
+            deferred.resolve(result);
+        })
+        return deferred.promise;
     }
     
     datafactory.actualizarCita = function (id ,aprobado){

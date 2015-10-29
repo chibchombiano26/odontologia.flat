@@ -9,8 +9,17 @@ angular.module("starter")
       
       var url = "https://script.google.com/macros/s/AKfycbx9NEkdam4juM9-sg01VqSMtLghUsJ0ALpGHUfBoHhnOHBdDiM/exec?calendarId=" + calendarId + "&fecha=" + date +"&callback=?";
       
-      $.getJSON(url, function( returnValue ){
+      $.getJSON(url, 
+      function( returnValue ){
           deferred.resolve(returnValue);
+      }, 
+      function(error){
+        debugger
+        deferred.reject(error);
+      },
+      function(error){
+        debugger
+        deferred.reject(error);
       });
       
       return deferred.promise;
@@ -48,6 +57,9 @@ angular.module("starter")
       dataFactory.getAgenda(calendarId, start.toString()).then(function(result){
           var horariosDisponibles = disponibilidad(intervals,result);
           deferred.resolve(horariosDisponibles);
+      },
+      function(error){
+        deferred.reject(error);
       })
       
       return deferred.promise;

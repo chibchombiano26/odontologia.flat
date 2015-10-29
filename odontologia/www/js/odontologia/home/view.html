@@ -1,13 +1,49 @@
 <ion-view view-title="Home">
   <ion-content>
-    
-      <ion-list>
-          <ion-item ng-click="solicitarCita()">Solicitar cita</ion-item>
-      </ion-list>
-      
-      <ion-list>
-          <ion-item ng-click="listadoCitas()">Mis citas</ion-item>
-      </ion-list>
-  
+
+  		<div class="list card">
+	      <div ng-click="solicitarCita()" class="item item-avatar">
+	        <img src="http://www.uscellular.com/uscellular/images/shared-data/selected-check-mark.png">
+	        <h2>Nueva cita</h2>
+	        <p>Buscaras dentro de los odontologos inscritos y podras solicitar una cita</p>
+	      </div>
+
+	      <div class="item item-body">
+	        <img class="full-image" src="http://www.headlinepolitics.com/wp-content/uploads/2015/04/dentist-1.jpg">
+	        <p>
+	          Podras buscar un medico seleccionar ver la disponibilidad que tenga y solicitar una cita, luego esperaras a tener una respuesta que llegara via email
+	        </p>	        
+	      </div>
+
+	      <div class="item tabs tabs-secondary tabs-icon-left">
+	        <a class="tab-item" ng-click="solicitarCita()">
+	          <i class="icon ion-plus"></i>
+	          Solicitar cita
+	        </a>
+	      </div>
+	    </div>
+
+	    <div class="list card">
+	      <div ng-click="listadoCitas()" class="item item-avatar">
+	        <img src="http://www.tap-auto.com/wp-content/uploads/2015/05/Quick_Links_Appointment.png">
+	        <h2>Ver mis citas</h2>
+	        <p>Permite ver el estado de mis citas</p>
+	      </div>
+
+	      <div class="item item-body">
+	        <img class="full-image" src="http://www.trustnurseservices.co.uk/midwife.jpg">
+	        <p>
+	          En esta opcion aparecera el historio de las citas solicitadas y el estado (Si se encuentran aprobadas o denegadas)
+	        </p>	        
+	      </div>
+
+	      <div class="item tabs tabs-secondary tabs-icon-left">
+	        <a class="tab-item" ng-click="listadoCitas()">
+	          <i class="icon ion-calendar"></i>
+	          Ver mis citas
+	        </a>
+	      </div>
+	    </div>
+
   </ion-content>
 </ion-view>

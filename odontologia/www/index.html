@@ -13,10 +13,16 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <!-- Jquery -->
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- Parse -->
+    <script src="lib/parse/parse-1.5.0.min.js"></script>
+
     <!-- Hefesoft -->
     <script src="js/vendors/hefesoft/util/utilVars.js"></script>
-
-
+    <script src="js/vendors/hefesoft/util/hefesoft.js"></script>
+  
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.min.js"></script>
@@ -29,11 +35,8 @@
      <!--Register-->
     <script src="js/vendors/hefesoft/modules/register.js"></script>
     
-    <!-- Jquery -->
-    <script src="lib/jquery/dist/jquery.min.js"></script>
     
-    <!-- Parse -->
-    <script src="https://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+    <!-- Parse Service -->
     <script src="js/vendors/hefesoft/parse/services/parse.js"></script>
     
     <!-- moment -->
@@ -60,6 +63,7 @@
     
     <!-- Login -->
     <script src="js/odontologia/login/controller.js"></script>
+    <script src="js/odontologia/login/logOut.js"></script>
     
     <!-- Home -->
     <script src="js/odontologia/home/controller.js"></script>
@@ -80,7 +84,7 @@
     
   </head>
 
-  <body ng-app="starter">
+  <body ng-app="starter" class="platform-windows platform-cordova platform-webview">
     <ion-nav-view></ion-nav-view>
   </body>
 </html>

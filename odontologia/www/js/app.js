@@ -27,8 +27,11 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $compileProvider) {
   
+  $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0):/);
+ 
+
   moment.locale('es');
   Parse.initialize("kWv0SwtEaz20E7gm5jUNRtzdbLoJktNYvpVWTYpc", "xhg8VzMlpguoJt3TffH62LntLUJj2DFYtYXwJ0Lg");
 
@@ -49,7 +52,7 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
     if (d.getElementById(id)) {return;}
     js = d.createElement(s); js.id = id;
     //js.src = "https://connect.facebook.net/en_US/sdk.js";
-    js.src = "https://connect.facebook.net/en_US/sdk/debug.js";
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
   
@@ -79,6 +82,16 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
       }
     }
   })
+
+  .state('index.logout',{
+    url: '/logout',
+    views:{
+      'menuLogin':{
+        templateUrl : 'js/odontologia/login/logOut.html',
+        controller : 'logOutCtrl'
+      }
+    }
+  })
     
     .state('app.home',{
       url: '/home',
@@ -92,6 +105,7 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
     
     .state('app.citas',{
       url: '/citas/:id',
+      cache: false,
       views:{
         'menuContent':{
           templateUrl : 'js/odontologia/citas/view.html',
@@ -101,7 +115,8 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
     })
     
     .state('app.listadoCitas',{
-      url: '/listadoCitas/:modo',
+      url: '/listadoCitas',
+      cache: false,
       views:{
         'menuContent':{
           templateUrl : 'js/odontologia/citas/listado.html',
@@ -122,6 +137,7 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
     
     .state('app.odontologos',{
       url: '/odontologos',
+      cache: false,
       views:{
         'menuContent':{
           templateUrl : 'js/odontologia/odontologos/view.html',

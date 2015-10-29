@@ -1,29 +1,51 @@
 /*global angular, Parse, _, moment*/
 angular.module("starter")
-.controller("citasCtrl", function($scope, $state, agendaService, pubNubService, $ionicLoading, $stateParams, citasService, utilService){
+.controller("citasCtrl", function($scope, $state, agendaService, pubNubService, $ionicLoading, $stateParams, citasService, utilService, $rootScope, PubNub, $timeout){
     
     var mesActual = moment().get("month");
     var diaActual = moment().get("date");
     var meses = moment.months();
-
+    var intervalo = {};
 
     $scope.months = meses.splice(mesActual);
     $scope.days = [];
     $scope.data = [];
     $scope.disponibilidad = [];
+
     
+    $scope.prestadorData = utilService['medicoSeleccionado'];    
     var currentUsername = Parse.User.current().get("email");
     var prestador = $stateParams.id;
-    
-    if(angular.isDefined($stateParams.modo)){
-        misCitas();
+
+    if(hefesoft.isEmpty($scope.prestadorData)){
+        $state.go("app.odontologos");
     }
     
+    misCitas();
+    cargarIntervalos();    
     pubNubService.initialise(currentUsername);
+    subscribeMessage(currentUsername);
+
+    function subscribeMessage(channelName){        
+        $rootScope.$on(PubNub.ngMsgEv(channelName), function(event, payload) {
+            if(payload.message.modo === "recargarCitas"){            
+                misCitas();
+            }
+        })
+    }
+
+    function cargarIntervalos(){        
+        citasService.getCitasInvervalo(prestador).then(function(data){
+            if(data.length >0){            
+                var result = data[0].toJSON();
+                intervalo = { horaInicio : parseInt(result.horaInicio), intervaloCitas : parseInt(result.intervaloCitas), numeroHorasTrabajo : parseInt(result.numeroHorasTrabajo)};
+            }
+        })
+    }
     
-    function misCitas(){
-        $scope.data = [];
+    function misCitas(){        
         citasService.obtenerCitasSolicitante().then(function(result){
+            $scope.data = [];            
             for (var i = 0; i < result.length; i++) {
                 $scope.data.push(result[i].toJSON());
             }
@@ -35,14 +57,24 @@ angular.module("starter")
         var yearSelected = moment().month(item).get('year');        
 
         var daysMonth = getDaysInMonth(monthSelected, yearSelected);
-        $scope.days = daysMonth.splice(diaActual -1); 
+
+        if(mesActual == monthSelected){
+            $scope.days = daysMonth.splice(diaActual -1); 
+        }
+        else{
+           $scope.days = daysMonth;    
+        }
     }
     
     $scope.dayChange = function(day, month){
         var fecha = moment({year : moment().get('year'), month: moment().month(month).get('month'), day: day });
         
-        if(fecha.isValid()){
-           consultarDisponibilidad(fecha);
+        if(fecha.isValid()){            
+            /*Aveces cuando el calendario del medico no es publico se queda cargando es para evitar que se quede asi*/
+            consultarDisponibilidad(fecha);
+            $timeout(function(){                
+                $ionicLoading.hide();
+            },30000);
         }  
     }
     
@@ -50,9 +82,9 @@ angular.module("starter")
         
     }
     
-    function consultarDisponibilidad(fecha){
+    function consultarDisponibilidad(fecha){        
         $ionicLoading.show();
-        agendaService.getDisponibilidad(fecha,9, 8, 15, "futbolito152@gmail.com").then(function(result){
+        agendaService.getDisponibilidad(fecha, intervalo.horaInicio, intervalo.numeroHorasTrabajo, intervalo.intervaloCitas, prestador).then(function(result){
         var disponibilidad = [];
         for (var i = 0; i < result.length; i++) {
             disponibilidad.push(result[i]);
@@ -66,6 +98,10 @@ angular.module("starter")
         });
 
         $scope.disponibilidad = result;
+        $ionicLoading.hide();
+      }, 
+      function(error){
+        alert(error);
         $ionicLoading.hide();
       })
     }

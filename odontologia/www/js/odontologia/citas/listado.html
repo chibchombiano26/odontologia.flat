@@ -3,9 +3,11 @@
   	<ion-list>
   	 <ion-item ng-repeat="i in data track by $index">   
 		 <a class="item item-avatar" href="#">
-           <img src="{{i.pictureUrl}}">
-           <h2>{{i.name}}</h2>
+           <img src="{{i.prestadorPictureUrl}}">
+           <h2>{{i.prestadorName}}</h2>
            <p>{{i.estado}}</p>
+           <p>{{i.prestadorEmail}}</p>
+           <p>{{i.message}}</p>
           </a>
   		</ion-item>
 	  </ion-list>

@@ -10,9 +10,8 @@ angular.module('hefesoft.parse')
        if(hefesoftLogActivated){
        	alert("Error: " + er.code + " " + er.message);
        	console.log("Error: " + er.code + " " + er.message);
-       }
+       }       
        
-       debugger
        $ionicLoading.hide();
        promise.reject(er);
     }
@@ -24,8 +23,7 @@ angular.module('hefesoft.parse')
       $ionicLoading.show();
       
       ngFB.login({scope: 'email,public_profile,publish_actions'}).then(
-        function (response) {
-          
+        function (response) {          
             if (response.status === 'connected') {
                 console.log('Facebook login succeeded');
                 dataFactory.getOpenFb().then(function(result){
@@ -35,7 +33,7 @@ angular.module('hefesoft.parse')
             } else {
                 $ionicLoading.hide();
                 deferred.reject("Error login fb");
-                alert('Facebook login failed');
+                alert('Error ingresando con facebook');
             }
       });
       
@@ -43,8 +41,7 @@ angular.module('hefesoft.parse')
     }
     
     dataFactory.loginFb = function(){
-        $ionicLoading.show();
-        
+        $ionicLoading.show();        
         Parse.FacebookUtils.logIn(null, {
           success: function(user) {
             $ionicLoading.hide();
@@ -56,7 +53,7 @@ angular.module('hefesoft.parse')
           },
           error: function(user, error) {
             $ionicLoading.hide();
-            alert("Error realizando la autorizacions");
+            alert("Error realizando la autorizacion");
           }
         });
     }
@@ -107,6 +104,7 @@ angular.module('hefesoft.parse')
           user.set("name", data.name);
           user.set("password", data.id);
           user.set("email", data.email);
+          user.set("authAs", "Facebook");
           
           //fb implementation
           user.set("pictureUrl", data.picture.data.url);
@@ -118,6 +116,10 @@ angular.module('hefesoft.parse')
             else{
               dataFactory.login(data.email, data.id, deferred);
             }
+          }, 
+          function(error){            
+            alert(error);
+            $ionicLoading.hide();
           });
        }
 
@@ -127,10 +129,22 @@ angular.module('hefesoft.parse')
          query.equalTo("email", user);
          query.find({
            success: function(result) {
-             console.log(result);
-             deferred.resolve(result);
+
+             var item = result[0].toJSON();
+             if(item.esMedico && item.esMedico === true){
+              deferred.reject("Estas inscrito como medico por favor usa una cuenta diferente, debes salir de tu cuenta actual de facebook e ingresar con otra");
+             }
+             else if(item.authAs && item.authAs === "Google"){
+              deferred.reject("Este correo se encuentra vinculada a una cuenta de google ya existente , debes salir de tu cuenta actual de facebook e ingresar con otra" + item.email);
+             }
+             else{
+               console.log(result);
+               deferred.resolve(result);
+             }
            },
-           error : function(e){ dataFactory.error(e, deferred)}
+           error : function(e){ 
+            dataFactory.error(e, deferred)
+          }
          });
          return deferred.promise;
        }
