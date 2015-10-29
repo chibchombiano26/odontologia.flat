@@ -7,7 +7,7 @@ angular.module("starter")
     }
     
     $scope.listadoCitas = function(){
-        $state.go("app.listadoCitas", {modo: 'miscitas'});
+        $state.go("app.listadoCitas", {modo: 'listando'});
     }
     
 })

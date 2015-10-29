@@ -1,4 +1,4 @@
-<ion-side-menus enable-menu-with-back-views="false">
+<ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable">
       <ion-nav-back-button>
@@ -23,15 +23,15 @@
           Login
         </ion-item>
         
-        <ion-item menu-close href="#/app/home" enable-menu-with-back-views="true">
+        <ion-item menu-close href="#/app/home">
           Inicio
         </ion-item>
 
-        <ion-item menu-close href="#/app/odontologos" enable-menu-with-back-views="true">
+        <ion-item menu-close href="#/app/odontologos">
           Nueva cita
         </ion-item>
 
-        <ion-item menu-close href="#/app/listadoCitas" enable-menu-with-back-views="true">
+        <ion-item menu-close ng-controller="listadoCitasCtrl" ng-click="misCitas()">
           Mis citas
         </ion-item>
 

@@ -16,8 +16,7 @@ angular.module('hefesoft.parse')
        promise.reject(er);
     }
     
-    dataFactory.loginOpenFb = function(){
-        
+    dataFactory.loginOpenFb = function(){        
       Parse.User.logOut();
       var deferred = $q.defer();
       $ionicLoading.show();
@@ -123,24 +122,29 @@ angular.module('hefesoft.parse')
           });
        }
 
-     dataFactory.existUser =  function (user){
+      dataFactory.existUser =  function (user){
          var deferred = $q.defer();
          var query = new Parse.Query(Parse.User);
          query.equalTo("email", user);
          query.find({
            success: function(result) {
-
-             var item = result[0].toJSON();
-             if(item.esMedico && item.esMedico === true){
-              deferred.reject("Estas inscrito como medico por favor usa una cuenta diferente, debes salir de tu cuenta actual de facebook e ingresar con otra");
-             }
-             else if(item.authAs && item.authAs === "Google"){
-              deferred.reject("Este correo se encuentra vinculada a una cuenta de google ya existente , debes salir de tu cuenta actual de facebook e ingresar con otra" + item.email);
-             }
-             else{
-               console.log(result);
-               deferred.resolve(result);
-             }
+             if(!hefesoft.isEmpty(result)){
+               var item = result[0].toJSON();
+               if(item.esMedico && item.esMedico === true){
+                deferred.reject("Estas inscrito como medico por favor usa una cuenta diferente, debes salir de tu cuenta actual de facebook e ingresar con otra");
+               }
+               else if(item.authAs && item.authAs === "Google"){
+                deferred.reject("Este correo se encuentra vinculada a una cuenta de google ya existente , debes salir de tu cuenta actual de facebook e ingresar con otra" + item.email);
+               }
+               else{
+                 console.log(result);
+                 deferred.resolve(result);
+               }
+            }
+            else{
+              console.log(result);
+              deferred.resolve(result);
+            }
            },
            error : function(e){ 
             dataFactory.error(e, deferred)

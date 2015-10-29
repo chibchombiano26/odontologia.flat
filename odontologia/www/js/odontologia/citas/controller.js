@@ -18,7 +18,9 @@ angular.module("starter")
     var currentUsername = Parse.User.current().get("email");
     var prestador = $stateParams.id;
 
-    if(hefesoft.isEmpty($scope.prestadorData)){
+    
+    /*Valida que se este pidiendo una cita y no listando una*/
+    if(hefesoft.isEmpty($scope.prestadorData) &&  hefesoft.isEmpty($stateParams.modo)){
         $state.go("app.odontologos");
     }
     
