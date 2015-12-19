@@ -49,6 +49,15 @@
         </div>
 
         <form>
+
+          <label class="item item-select" name="Prestador">
+                <span class="input-label">Prestador</span>
+                <select  
+                          ng-options="item.nombre for item in prestadores"
+                          ng-change="prestadorChange(dataAppointment.selectedPrestador)"
+                          ng-model="dataAppointment.selectedPrestador"></select>
+            </label>
+
             <label class="item item-select" name="Mes">
                 <span class="input-label">Mes</span>
                  <select  
@@ -60,8 +69,8 @@
                 <span class="input-label">Dia</span>
                 <select  
                           ng-options="day for day in days"
-                          ng-change="dayChange(selectedDay, selectedMonth)"
-                          ng-model="selectedDay"></select>
+                          ng-change="dayChange(dataAppointment.selectedDay, selectedMonth)"
+                          ng-model="dataAppointment.selectedDay"></select>
             </label>
             <label class="item item-select" name="Disponibilidad">
                 <span class="input-label">Disponibilidad</span>

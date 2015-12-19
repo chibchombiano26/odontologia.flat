@@ -2,8 +2,25 @@
 angular.module('starter')
 .service('citasService', function($q){
     
-    var datafactory = {};
-    
+    var datafactory = {};    
+   
+     datafactory.obtenerPrestadores = function(item){
+        var deferred = $q.defer();
+        var Pacientes = Parse.Object.extend("Prestador");
+        var pacientes = new Parse.Query(Pacientes);
+        
+        pacientes.equalTo("username", item.email);
+        pacientes.find()
+        .then(function(data){
+            deferred.resolve(data); 
+        },
+        function(data, error){
+         deferred.reject(error);    
+        });
+        
+        return deferred.promise;
+    }
+
     datafactory.obtenerCitas = function(){
         var deferred = $q.defer()
         var Citas = Parse.Object.extend('Citas');
@@ -23,9 +40,7 @@ angular.module('starter')
         query.find().then(function(result){
             deferred.resolve(result);
         })
-        return deferred.promise;
-
-        
+        return deferred.promise;        
     }
 
     datafactory.getCitasInvervalo = function(prestador){

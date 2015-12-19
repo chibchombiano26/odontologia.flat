@@ -9,11 +9,9 @@ angular.module("starter")
     }
 
     // Open the login modal
-    $scope.login = function() {
-      debugger
+    $scope.login = function() {      
       //parseService.loginFb();      
-        parseService.loginOpenFb().then(function(result){
-        //parseService.loginOauth().then(function(result){
+        parseService.loginOpenFb().then(function(result){        
         var imagenUsuario = Parse.User.current().get("pictureUrl");
         var email = Parse.User.current().get("email");
         

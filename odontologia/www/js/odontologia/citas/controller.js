@@ -11,8 +11,14 @@ angular.module("starter")
     $scope.days = [];
     $scope.data = [];
     $scope.disponibilidad = [];
+    $scope.prestadores = [];
     $scope.paciente = {};
-    $scope.invalido = true;
+    $scope.invalido = true;  
+    $scope.selectedDay;
+    $scope.dataAppointment = { selectedDay : 0, prestadorSeleccionado : "Ninguno"};  
+
+    var monthSelected;
+    var yearSelected;
     
     $scope.prestadorData = utilService['medicoSeleccionado'];    
     var currentUsername = Parse.User.current().get("email");
@@ -29,6 +35,23 @@ angular.module("starter")
     pubNubService.initialise(currentUsername);
     subscribeMessage(currentUsername);
 
+    function inicializar(){        
+        if($scope.prestadorData){
+            citasService.obtenerPrestadores($scope.prestadorData).then(function(result){
+                $scope.prestadores = [];
+                for (var i = result.length - 1; i >= 0; i--) {
+                    var item = result[i].toJSON();
+                    $scope.prestadores.push(item);
+                };
+
+                if($scope.prestadores.length >0)
+                {
+                    $scope.dataAppointment.selectedPrestador = $scope.prestadores[0];
+                }
+            })
+        }
+    }
+
     function subscribeMessage(channelName){        
         $rootScope.$on(PubNub.ngMsgEv(channelName), function(event, payload) {
             if(payload.message.modo === "recargarCitas"){            
@@ -37,7 +60,7 @@ angular.module("starter")
         })
     }
 
-    function cargarIntervalos(){        
+    function cargarIntervalos(){                
         citasService.getCitasInvervalo(prestador).then(function(data){
             if(data.length >0){            
                 var result = data[0].toJSON();
@@ -52,14 +75,33 @@ angular.module("starter")
             for (var i = 0; i < result.length; i++) {
                 $scope.data.push(result[i].toJSON());
             }
+            
+            if($scope.data.length > 0){                
+                $scope.prestadorChange($scope.data[0]);
+            }
+
         });
+    }
+
+    $scope.prestadorChange = function(item){        
+        prestador = item;        
+        $scope.days = null;
+        getDays();
     }
     
     $scope.monthChange = function(item){
         $scope.invalido = true;
 
-        var monthSelected = moment().month(item).get('month');
-        var yearSelected = moment().month(item).get('year');        
+        monthSelected = moment().month(item).get('month');
+        yearSelected = moment().month(item).get('year');        
+
+        getDays();        
+    }
+
+    function getDays(){
+        $scope.days = [];
+        
+        $scope.dataAppointment.selectedDay = 0;
 
         var daysMonth = getDaysInMonth(monthSelected, yearSelected);
 
@@ -89,7 +131,7 @@ angular.module("starter")
     
     function consultarDisponibilidad(fecha){        
         $ionicLoading.show();
-        agendaService.getDisponibilidad(fecha, intervalo.horaInicio, intervalo.numeroHorasTrabajo, intervalo.intervaloCitas, prestador).then(function(result){
+        agendaService.getDisponibilidad(fecha, intervalo.horaInicio, intervalo.numeroHorasTrabajo, intervalo.intervaloCitas, prestador.idCalendar).then(function(result){
 
         /*Activa el boton de solicitar*/
         $scope.invalido = false;
@@ -130,7 +172,7 @@ angular.module("starter")
         item["email"] = Parse.User.current().get("email");
         item["name"] = Parse.User.current().get("name");
         item["pictureUrl"] = Parse.User.current().get("pictureUrl");
-        item["message"] = item.name + " ha solicitado una cita para el "  + item.start.format("LLLL");
+        item["message"] = item.name + " ha solicitado una cita para el "  + item.start.format("LLLL") + " Con : " + prestador.nombre;
 
         if($scope.paciente.hasOwnProperty("numeroContacto")){
             item["numeroContacto"] = $scope.paciente.numeroContacto.toString();
@@ -139,7 +181,7 @@ angular.module("starter")
            item["numeroContacto"] = "No suministrado";   
         }
 
-        pubNubService.sendMessage(prestador, angular.toJson(item));
+        pubNubService.sendMessage($stateParams.id, angular.toJson(item));
         saveCita(item, prestador);
     }
     
@@ -154,7 +196,8 @@ angular.module("starter")
         cita.set("name", item.name);
         cita.set("pictureUrl", item.pictureUrl);
         cita.set("message", item.message);
-        cita.set("medico", prestador);
+        cita.set("medico", $stateParams.id);
+        cita.set("prestador", JSON.parse(angular.toJson(prestador)));
         cita.set("start", item.start.format("YYYY-MM-DD HH:mm"));
         cita.set("end", item.end.format("YYYY-MM-DD HH:mm"));
         cita.set("estado", "solicitada");
@@ -176,5 +219,7 @@ angular.module("starter")
             $state.go("app.success")
         })
     }
+
+    inicializar();
     
 })
