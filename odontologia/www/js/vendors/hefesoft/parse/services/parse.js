@@ -1,28 +1,28 @@
 angular.module('hefesoft.parse')
-.service('parseService', 
+.service('parseService',
 	['$q', '$timeout', 'pubNubService', '$ionicLoading', 'ngFB', function ($q, $timeout, pubNubService, $ionicLoading, ngFB) {
-	
-	
+
+
 	var dataFactory = {};
-	
+
 	dataFactory.error = function(er, promise) {
-       
+
        if(hefesoftLogActivated){
        	alert("Error: " + er.code + " " + er.message);
        	console.log("Error: " + er.code + " " + er.message);
-       }       
-       
+       }
+
        $ionicLoading.hide();
        promise.reject(er);
     }
-    
-    dataFactory.loginOpenFb = function(){        
+
+    dataFactory.loginOpenFb = function(){
       Parse.User.logOut();
       var deferred = $q.defer();
       $ionicLoading.show();
-      
+
       ngFB.login({scope: 'email,public_profile,publish_actions'}).then(
-        function (response) {          
+        function (response) {
             if (response.status === 'connected') {
                 console.log('Facebook login succeeded');
                 dataFactory.getOpenFb().then(function(result){
@@ -35,17 +35,17 @@ angular.module('hefesoft.parse')
                 alert('Error ingresando con facebook');
             }
       });
-      
+
       return deferred.promise;
     }
-    
+
     dataFactory.loginFb = function(){
-        $ionicLoading.show();        
+        $ionicLoading.show();
         Parse.FacebookUtils.logIn(null, {
           success: function(user) {
             $ionicLoading.hide();
             if (!user.existed()) {
-              updateInoProfile(user); 
+              updateInoProfile(user);
             } else {
               updateInoProfile(user);
             }
@@ -56,31 +56,31 @@ angular.module('hefesoft.parse')
           }
         });
     }
-    
+
     function updateInoProfile(user){
       dataFactory.getInfo().then(function(dataUser){
-          
+
           user.set("email", dataUser.email);
           user.set("picture", dataUser.picture);
           user.set("name",  dataUser.name);
           user.save();
-          
+
           pubNubService.initialise(dataUser.email);
       });
     }
-    
+
     dataFactory.getInfo = function(){
         var deferred = $q.defer();
         FB.api('/me', {fields: 'name,email,picture'}, function(response) {
           deferred.resolve(response);
         });
-        
+
         return deferred.promise;
     }
-    
+
     dataFactory.getOpenFb = function(){
       var deferred = $q.defer();
-      
+
       ngFB.api({
         path: '/me',
         params: {fields: 'id,name,email,picture'}
@@ -92,11 +92,11 @@ angular.module('hefesoft.parse')
         deferred.reject(error);
         alert('Facebook error: ' + error.error_description);
       });
-      
+
       return deferred.promise;
     }
-    
-    
+
+
     dataFactory.saveFaceBookUserParse =  function(data, deferred){
           var user = new Parse.User();
           user.set("username", data.email);
@@ -104,7 +104,7 @@ angular.module('hefesoft.parse')
           user.set("password", data.id);
           user.set("email", data.email);
           user.set("authAs", "Facebook");
-          
+
           //fb implementation
           user.set("pictureUrl", data.picture.data.url);
 
@@ -115,8 +115,8 @@ angular.module('hefesoft.parse')
             else{
               dataFactory.login(data.email, data.id, deferred);
             }
-          }, 
-          function(error){            
+          },
+          function(error){
             alert(error);
             $ionicLoading.hide();
           });
@@ -146,7 +146,7 @@ angular.module('hefesoft.parse')
               deferred.resolve(result);
             }
            },
-           error : function(e){ 
+           error : function(e){
             dataFactory.error(e, deferred)
           }
          });
@@ -154,44 +154,95 @@ angular.module('hefesoft.parse')
        }
 
      dataFactory.signUp =  function(user, deferred){
+			 	var promesa = $q.defer();
          user.signUp(null, {
            success: function(user) {
-             deferred.resolve(user);
+
+						 if(deferred){
+						 	deferred.resolve(user);
+					 	 }
+						 promesa.resolve(user);
+
              //saveRegistrationId(user);
            },
            error: function(e){ dataFactory.error(e, deferred)}
          });
+
+				 return promesa.promise;
        }
 
       dataFactory.login =  function(username, pass, deferred){
+				var promesa = $q.defer();
          Parse.User.logIn(username, pass, {
           success: function(user) {
-            deferred.resolve(user);
+						if(deferred){
+            	deferred.resolve(user);
+						}
+
+						promesa.resolve(user);
+
            // saveRegistrationId(user);
           },
           error: function(e){ dataFactory.error(e, deferred)}
         });
+
+				return promesa.promise;
        }
-       
+
        /*
        //Cuando el usuario se loguea i hay posibilidad de enviar push notification en chrome guardar el id de la registracion
        function saveRegistrationId(user){
            var timer = $timeout(function(){
             if(subscriptionId){
-                
+
                 user.set("registrationId", subscriptionId);
                 user.save();
                 //Detiene el timer
                 $timeout.cancel(timer);
-            }   
+            }
            },3000);
-           
-            
+
+
        }
        */
 
-	
-	 
+		dataFactory.proccessUserOaut0 = function(data){
+
+			var deferred = $q.defer();
+
+			var user = new Parse.User();
+			user.set("username", data.email);
+			user.set("name", data.name);
+			user.set("password", data.password);
+			user.set("email", data.email);
+			user.set("authAs", "Facebook");
+
+			//fb implementation
+			user.set("pictureUrl", data.pictureUrl);
+
+			dataFactory.existUser(data.email).then(function(result){
+				if(result.length == 0){
+					dataFactory.signUp(user, deferred).then(function(user){
+						deferred.resolve(user);
+					})
+				}
+				else{
+					dataFactory.login(data.email, data.password, deferred).then(function(user){
+						deferred.resolve(user);
+					})
+				}
+			},
+			function(error){
+				deferred.reject(error);
+				$ionicLoading.hide();
+			});
+
+			return deferred.promise;
+
+
+		}
+
+
 	return dataFactory;
 
 }])

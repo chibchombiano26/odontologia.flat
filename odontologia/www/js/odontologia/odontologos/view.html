@@ -1,15 +1,15 @@
-<ion-view view-title="Medicos">
+<ion-view view-title="Clinicas">
   <ion-content>
 
   <div class="list list-inset">
     <label class="item item-input">
       <i class="icon ion-search placeholder-icon"></i>
-      <input type="text" placeholder="Buscar odontologo" ng-model="busquedaOdontologo">
+      <input type="text" placeholder="Buscar clinica" ng-model="busquedaOdontologo">
     </label>
   </div>
 
 	<ion-list>
-  	 <ion-item ng-repeat="item in Odontologos | filter:busquedaOdontologo">   
+  	 <ion-item ng-repeat="item in Odontologos | filter:busquedaOdontologo">
 		 <a class="item item-avatar"ng-click="solicitarCita(item)">
           <img ng-src="{{item.pictureUrl}}">
           <h2>{{item.name}}</h2>
