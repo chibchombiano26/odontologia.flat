@@ -47,6 +47,7 @@ angular.module("starter")
                 if($scope.prestadores.length >0)
                 {
                     $scope.dataAppointment.selectedPrestador = $scope.prestadores[0];
+                    prestador = $scope.prestadores[0];
                 }
             })
         }
