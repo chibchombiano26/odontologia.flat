@@ -15,6 +15,7 @@ angular.module("starter")
         dict: 'es',
         disableSignupAction: true,
         icon: 'img/logos/SmallLogo.scale-180.png',
+        //connections: ['facebook', 'google-oauth2'],
         connections: ['facebook', 'google-oauth2'],
         authParams: {
           scope: 'openid offline_access',

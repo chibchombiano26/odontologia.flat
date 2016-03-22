@@ -6,7 +6,15 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 'hefesoft.pubnub', 'hefesoft.parse', 'pubnub.angular.service', 'ngCordova', 'ngOpenFB',
+angular.module('starter', ['ionic',
+  'ionic.service.core',
+  'starter.controllers',
+  'hefesoft.pubnub',
+  'hefesoft.parse',
+  'pubnub.angular.service',
+  'ngCordova',
+  'ngOpenFB',
+  'ionic.service.push',
   'auth0',
   'angular-storage',
   'angular-jwt'])
@@ -14,8 +22,7 @@ angular.module('starter', ['ionic','ionic.service.core', 'starter.controllers', 
 .run(function($rootScope, $ionicPlatform, ngFB, auth, $state, store, jwtHelper) {
   $ionicPlatform.ready(function() {
 
-    ngFB.init({appId: '1665259377039481'});
-
+    ngFB.init({appId: '1665259377039481'});    
     auth.hookEvents();
 
     //This event gets triggered on URL change
