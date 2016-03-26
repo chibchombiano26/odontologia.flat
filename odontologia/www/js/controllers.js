@@ -1,16 +1,17 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout,store, $ionicPush, $ionicPlatform) {
-  
+
   $ionicPlatform.ready(function() {
     $ionicPush.init({
       "debug": true,
       "onNotification": function(notification) {
+        console.log(notification);
         var payload = notification.payload;
         alert(notification, payload);
       },
       "onRegister": function(data) {
-        console.log(data.token);
+        console.log("Toke recieved: " + data.token);
         store.set('pushToken', data.token);
       }
     });
